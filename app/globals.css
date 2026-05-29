@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #fdf9fa;
+  --bg-tertiary: #f8edf0;
+  
+  /* Identidad Visual Benítez: Rosa / Rose Premium */
+  --brand-primary: #e06a8f;
+  --brand-secondary: #ea8ea9;
+  --brand-dark: #b54667;
+  --brand-light: #fbeef1;
+  
+  --text-primary: #1f1a1c;
+  --text-secondary: #6e6266;
+  --text-muted: #9c8f93;
+  --border-color: #eedbe0;
+  --brand-border: rgba(224, 106, 143, 0.15);
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-montserrat), sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom premium scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  border: 2px solid var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-primary);
+}
+
+/* Premium glassmorphism effects */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+}
+
+.glass-brand {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(224, 106, 143, 0.25);
+}
+
+/* Micro-animations and hover effects */
+.hover-brand {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-brand:hover {
+  color: var(--brand-primary);
+  transform: translateY(-1px);
+}
+
+.btn-brand {
+  background-color: var(--brand-primary);
+  color: #ffffff;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--brand-primary);
+}
+
+.btn-brand:hover {
+  background-color: var(--brand-secondary);
+  border-color: var(--brand-secondary);
+  box-shadow: 0 0 15px rgba(224, 106, 143, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-outline-brand {
+  background-color: transparent;
+  color: var(--brand-primary);
+  font-weight: 600;
+  border: 1px solid var(--brand-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-outline-brand:hover {
+  background-color: var(--brand-primary);
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(224, 106, 143, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+/* Utility to overlay on images */
+.dark-overlay {
+  background: linear-gradient(to top, rgba(10, 10, 10, 1) 0%, rgba(10, 10, 10, 0.4) 50%, rgba(10, 10, 10, 0.2) 100%);
+}
+
+.premium-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #fdf9fa 100%);
+  border: 1px solid rgba(224, 106, 143, 0.15);
+}
+
+.text-brand {
+  color: var(--brand-primary);
+}
+
+.bg-brand-light {
+  background-color: rgba(224, 106, 143, 0.1);
+}
+
+/* Custom form focus styling */
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 5px rgba(224, 106, 143, 0.3);
+}
