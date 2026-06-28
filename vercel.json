@@ -1,6 +1,9 @@
 {
   "functions": {
-    "**/*": {
+    "app/api/**/*.js": {
+      "includeFiles": "prisma/dev.db"
+    },
+    "app/page.js": {
       "includeFiles": "prisma/dev.db"
     }
   }
