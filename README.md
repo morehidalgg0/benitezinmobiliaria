@@ -1,6 +1,6 @@
 # Benítez Inmobiliaria - Plataforma Web Premium & Sync Portal
 
-Este es el sistema web completo para **Benítez Inmobiliaria** (benitezinmobiliaria.com.ar), desarrollado con Next.js 14, Tailwind CSS, Prisma y SQLite. Cuenta con un diseño elegante de alta gama en tonos oscuros y dorados (champagne), y un panel de administración integrado para gestionar el catálogo y publicar de forma automatizada en **Argenprop** y **Mercado Libre Inmuebles (MLA1459)**.
+Este es el sistema web completo para **Benítez Inmobiliaria** (benitezinmobiliaria.com.ar), desarrollado con Next.js 14, Tailwind CSS, Prisma y PostgreSQL. Cuenta con un diseño elegante de alta gama en tonos oscuros y dorados (champagne), y un panel de administración integrado para gestionar el catálogo y publicar de forma automatizada en **Argenprop** y **Mercado Libre Inmuebles (MLA1459)**.
 
 ---
 
@@ -12,7 +12,7 @@ Este es el sistema web completo para **Benítez Inmobiliaria** (benitezinmobilia
 
 ---
 
-## 🗂️ Esquema de Base de Datos (SQLite)
+## 🗂️ Esquema de Base de Datos (PostgreSQL)
 La base de datos utiliza **Prisma ORM** con los siguientes modelos:
 * `User`: Credenciales del administrador.
 * `Property`: Ficha técnica de inmuebles (ambientes, superficies, precios en ARS/USD, fotos, etc.).
@@ -33,8 +33,8 @@ El proyecto se encuentra ubicado en:
 Cree o edite el archivo `.env` en la raíz del proyecto con las siguientes claves:
 
 ```env
-# Conexión Base de Datos Local
-DATABASE_URL="file:./dev.db"
+# Conexión Base de Datos PostgreSQL
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DATABASE?sslmode=require"
 
 # Clave secreta para firmar sesiones JWT
 JWT_SECRET="benitez-secret-key-premium-token-2026-gold-estate"
@@ -60,16 +60,18 @@ npm install
 ```
 
 ### 4. Sincronizar Base de Datos y Generar Cliente Prisma
-Corra el siguiente comando para estructurar la base de datos SQLite (`dev.db`):
+Corra el siguiente comando para crear/actualizar las tablas en PostgreSQL:
 ```bash
-npx prisma db push
+npm run db:push
 ```
 
 ### 5. Cargar Datos de Prueba (Seeding)
-Para generar el usuario administrador y las propiedades modelo, ejecute:
+Para generar el usuario administrador y las propiedades modelo, ejecute solo una vez:
 ```bash
-node prisma/seed.js
+npm run db:seed
 ```
+
+Importante: el seed borra datos existentes y vuelve a crear datos de prueba. No lo ejecute sobre una base con datos reales.
 
 ### 6. Iniciar Servidor de Desarrollo
 Inicie la aplicación localmente:
@@ -104,5 +106,15 @@ Debido a que Mercado Libre utiliza autenticación OAuth 2.0 segura con redirecci
 4. Ingrese al panel administrador de Benítez (`/admin/dashboard`).
 5. En la esquina superior derecha verá la sección de Mercado Libre. Haga clic en **Conectar Cuenta**.
 6. Será redirigido al portal de Mercado Libre para autorizar a la inmobiliaria.
-7. Una vez aceptado, Mercado Libre lo devolverá al sistema. Los tokens se guardarán de manera segura en la base de datos SQLite y se auto-refrescarán antes de expirar sin intervención manual.
+7. Una vez aceptado, Mercado Libre lo devolverá al sistema. Los tokens se guardarán de manera segura en la base de datos PostgreSQL y se auto-refrescarán antes de expirar sin intervención manual.
 8. Al guardar una propiedad (tipo CASA, DEPT, LOTE, PH, LOCAL) marcada como activa, el sistema la publicará automáticamente bajo la categoría inmobiliaria **MLA1459**.
+
+---
+
+## Deploy en Vercel con Datos Persistentes
+
+1. Cree una base PostgreSQL persistente, por ejemplo Vercel Postgres, Neon o Supabase.
+2. En Vercel, agregue `DATABASE_URL` en Project Settings -> Environment Variables.
+3. Ejecute `npm run db:push` contra esa `DATABASE_URL` para crear las tablas.
+4. Ejecute `npm run db:seed` solo si necesita cargar datos iniciales. No lo ejecute después de cargar datos reales desde el panel admin.
+5. Haga redeploy. El comando `npm run build` ya no modifica ni resetea la base de datos.
