@@ -63,7 +63,7 @@ export default function Footer() {
           <ul className="space-y-4 text-sm">
             <li className="flex items-start">
               <MapPin className="w-5 h-5 mr-3 text-brand shrink-0 mt-0.5" />
-              <span>Av. Alvear 1700, Recoleta, CABA, Argentina</span>
+              <span>De la Corvina 1296 Loc 7, B7167 Pinamar, Provincia de Buenos Aires</span>
             </li>
             <li className="flex items-center">
               <Phone className="w-5 h-5 mr-3 text-brand shrink-0" />
@@ -98,7 +98,7 @@ export default function Footer() {
           </h4>
           <div className="w-full h-40 rounded-lg overflow-hidden border border-neutral-800 shadow-inner relative group">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3284.858079203923!2d-58.39045768423696!3d-34.58887966387807!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bccab221c5f3b7%3A0xc00f135b1bf4101e!2sAv.%20Alvear%201700%2C%20C1014%20CABA%2C%20Argentina!5e0!3m2!1ses-419!2sar!4v1653300000000!5m2!1ses-419!2sar"
+              src="https://www.google.com/maps?q=Benitez%20inmobiliaria%20pinamar%2C%20De%20la%20Corvina%201296%20Loc%207%2C%20B7167%20Pinamar%2C%20Provincia%20de%20Buenos%20Aires&output=embed"
               width="100%"
               height="100%"
               style={{ border: 0 }}

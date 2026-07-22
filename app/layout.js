@@ -18,8 +18,8 @@ export const viewport = {
 
 export const metadata = {
   title: 'Benítez Inmobiliaria | Tu mejor inversión empieza con Benítez',
-  description: 'Venta, alquiler y alquiler temporario de propiedades residenciales, comerciales y emprendimientos exclusivos en Argentina. Av. Alvear 1700, Recoleta.',
-  keywords: 'inmobiliaria, benitez, premium, recoleta, puerto madero, nordelta, alquiler, venta, departamentos, casas',
+  description: 'Venta, alquiler y alquiler temporario de propiedades residenciales, comerciales y emprendimientos exclusivos en Pinamar. De la Corvina 1296 Loc 7, Pinamar.',
+  keywords: 'inmobiliaria, benitez, pinamar, costa atlantica, alquiler, venta, departamentos, casas',
   robots: 'index, follow',
 };
 
