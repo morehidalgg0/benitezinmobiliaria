@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { 
   Building, Landmark, Layers, Inbox, LogOut, CheckCircle, 
   XCircle, RefreshCw, Plus, Edit2, Trash2, Link2, Link2Off,
-  User, Check, X, Shield, ExternalLink
+  User, Check, X, Shield, ExternalLink, ImagePlus
 } from 'lucide-react';
 
 function DashboardContent() {
@@ -51,6 +51,7 @@ function DashboardContent() {
   const [propImagesText, setPropImagesText] = useState('');
   const [propFeatured, setPropFeatured] = useState(false);
   const [propActive, setPropActive] = useState(true);
+  const [uploadingPropertyImages, setUploadingPropertyImages] = useState(false);
 
   // Inputs del formulario de emprendimientos
   const [devTitle, setDevTitle] = useState('');
@@ -58,6 +59,70 @@ function DashboardContent() {
   const [devStatus, setDevStatus] = useState('CONSTRUCTION');
   const [devLocation, setDevLocation] = useState('');
   const [devImagesText, setDevImagesText] = useState('');
+  const [uploadingDevelopmentImages, setUploadingDevelopmentImages] = useState(false);
+
+  const parseImagesInput = (value) => value
+    .split('\n')
+    .map((url) => url.trim())
+    .filter((url) => url !== '');
+
+  const uploadImagesToBlob = async (files) => {
+    const validFiles = Array.from(files).filter((file) => file.type.startsWith('image/'));
+    const maxSize = 4 * 1024 * 1024;
+    const oversized = validFiles.find((file) => file.size > maxSize);
+
+    if (oversized) {
+      throw new Error(`La imagen "${oversized.name}" supera 4 MB. Redúzcala antes de subirla.`);
+    }
+
+    return Promise.all(validFiles.map(async (file) => {
+      const response = await fetch(`/api/admin/upload?filename=${encodeURIComponent(file.name)}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': file.type,
+        },
+        body: file,
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || `No se pudo subir la imagen "${file.name}".`);
+      }
+
+      return data.url;
+    }));
+  };
+
+  const appendImages = (currentValue, images) => {
+    const currentImages = parseImagesInput(currentValue);
+    return [...currentImages, ...images].join('\n');
+  };
+
+  const handlePropertyImageFiles = async (e) => {
+    try {
+      setUploadingPropertyImages(true);
+      const images = await uploadImagesToBlob(e.target.files);
+      setPropImagesText((current) => appendImages(current, images));
+      e.target.value = '';
+    } catch (err) {
+      setErrorPropertyForm(err.message || 'No se pudieron cargar las imágenes.');
+    } finally {
+      setUploadingPropertyImages(false);
+    }
+  };
+
+  const handleDevelopmentImageFiles = async (e) => {
+    try {
+      setUploadingDevelopmentImages(true);
+      const images = await uploadImagesToBlob(e.target.files);
+      setDevImagesText((current) => appendImages(current, images));
+      e.target.value = '';
+    } catch (err) {
+      setGlobalError(err.message || 'No se pudieron cargar las imágenes.');
+    } finally {
+      setUploadingDevelopmentImages(false);
+    }
+  };
 
   // 1. Verificar sesión e inicializar
   useEffect(() => {
@@ -195,7 +260,7 @@ function DashboardContent() {
       try {
         parsedImages = JSON.parse(prop.images || '[]');
       } catch (e) {}
-      setPropImagesText(parsedImages.join(', '));
+      setPropImagesText(parsedImages.join('\n'));
       setPropFeatured(prop.featured);
       setPropActive(prop.active);
     } else {
@@ -213,7 +278,7 @@ function DashboardContent() {
       setPropGarage(false);
       setPropAddress('');
       setPropNeighborhood('');
-      setPropImagesText('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80, https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80');
+      setPropImagesText('');
       setPropFeatured(false);
       setPropActive(true);
     }
@@ -225,10 +290,7 @@ function DashboardContent() {
     setErrorPropertyForm('');
 
     // Procesar imágenes
-    const imagesArray = propImagesText
-      .split(',')
-      .map(url => url.trim())
-      .filter(url => url !== '');
+    const imagesArray = parseImagesInput(propImagesText);
 
     const payload = {
       title: propTitle,
@@ -301,23 +363,20 @@ function DashboardContent() {
       try {
         parsedImages = JSON.parse(dev.images || '[]');
       } catch (e) {}
-      setDevImagesText(parsedImages.join(', '));
+      setDevImagesText(parsedImages.join('\n'));
     } else {
       setDevTitle('');
       setDevDescription('');
       setDevStatus('CONSTRUCTION');
       setDevLocation('');
-      setDevImagesText('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80');
+      setDevImagesText('');
     }
     setShowDevelopmentForm(true);
   };
 
   const handleDevelopmentSubmit = async (e) => {
     e.preventDefault();
-    const imagesArray = devImagesText
-      .split(',')
-      .map(url => url.trim())
-      .filter(url => url !== '');
+    const imagesArray = parseImagesInput(devImagesText);
 
     const payload = {
       title: devTitle,
@@ -896,14 +955,32 @@ function DashboardContent() {
 
               {/* IMAGENES */}
               <div>
-                <label className="block text-[10px] font-semibold text-neutral-400 uppercase tracking-wider mb-2">URLs de las Fotos (Separadas por coma)</label>
+                <label className="block text-[10px] font-semibold text-neutral-400 uppercase tracking-wider mb-2">Fotos de la Propiedad</label>
+                <label className="mb-3 flex cursor-pointer items-center justify-center gap-2 rounded border border-dashed border-brand/40 bg-brand-light px-4 py-4 text-[10px] font-semibold uppercase tracking-wider text-brand transition-colors hover:border-brand hover:bg-brand-light/80">
+                  <ImagePlus className="w-4 h-4" />
+                  {uploadingPropertyImages ? 'Subiendo imágenes...' : 'Subir imágenes desde el dispositivo'}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    disabled={uploadingPropertyImages}
+                    onChange={handlePropertyImageFiles}
+                    className="hidden"
+                  />
+                </label>
+                <p className="mb-2 text-[10px] leading-relaxed text-neutral-500">
+                  Puede subir archivos JPG/PNG/WebP de hasta 4 MB cada uno. Se guardan en Vercel Blob y aquí queda la URL pública. También puede pegar URLs, una por línea.
+                </p>
                 <textarea
-                  rows="3"
+                  rows="4"
                   value={propImagesText}
                   onChange={(e) => setPropImagesText(e.target.value)}
                   className="w-full bg-neutral-950 border border-neutral-800 rounded px-4 py-3 text-white resize-none"
-                  placeholder="Pegue las URLs de las imágenes separadas por coma..."
+                  placeholder="Pegue URLs de imágenes, una por línea. Las imágenes subidas aparecerán aquí automáticamente."
                 />
+                <p className="mt-2 text-[10px] text-neutral-500">
+                  Imágenes cargadas: {parseImagesInput(propImagesText).length}
+                </p>
               </div>
 
               {/* OPCIONES ADICIONALES */}
@@ -931,7 +1008,8 @@ function DashboardContent() {
               <div className="flex gap-4 border-t border-neutral-850 pt-6 mt-6">
                 <button
                   type="submit"
-                  className="btn-brand px-6 py-3.5 rounded text-xs uppercase tracking-wider font-semibold"
+                  disabled={uploadingPropertyImages}
+                  className="btn-brand px-6 py-3.5 rounded text-xs uppercase tracking-wider font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   Guardar Propiedad
                 </button>
@@ -1014,20 +1092,39 @@ function DashboardContent() {
               </div>
 
               <div>
-                <label className="block text-[10px] font-semibold text-neutral-400 uppercase tracking-wider mb-2">URLs de las Fotos</label>
+                <label className="block text-[10px] font-semibold text-neutral-400 uppercase tracking-wider mb-2">Fotos del Emprendimiento</label>
+                <label className="mb-3 flex cursor-pointer items-center justify-center gap-2 rounded border border-dashed border-brand/40 bg-brand-light px-4 py-4 text-[10px] font-semibold uppercase tracking-wider text-brand transition-colors hover:border-brand hover:bg-brand-light/80">
+                  <ImagePlus className="w-4 h-4" />
+                  {uploadingDevelopmentImages ? 'Subiendo imágenes...' : 'Subir imágenes desde el dispositivo'}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    disabled={uploadingDevelopmentImages}
+                    onChange={handleDevelopmentImageFiles}
+                    className="hidden"
+                  />
+                </label>
+                <p className="mb-2 text-[10px] leading-relaxed text-neutral-500">
+                  Puede subir archivos JPG/PNG/WebP de hasta 4 MB cada uno. Se guardan en Vercel Blob y aquí queda la URL pública. También puede pegar URLs, una por línea.
+                </p>
                 <textarea
-                  rows="2"
+                  rows="4"
                   value={devImagesText}
                   onChange={(e) => setDevImagesText(e.target.value)}
                   className="w-full bg-neutral-950 border border-neutral-800 rounded px-4 py-3 text-white resize-none"
-                  placeholder="URLs separadas por comas..."
+                  placeholder="Pegue URLs de imágenes, una por línea. Las imágenes subidas aparecerán aquí automáticamente."
                 />
+                <p className="mt-2 text-[10px] text-neutral-500">
+                  Imágenes cargadas: {parseImagesInput(devImagesText).length}
+                </p>
               </div>
 
               <div className="flex gap-4 border-t border-neutral-850 pt-6 mt-6">
                 <button
                   type="submit"
-                  className="btn-brand px-6 py-3.5 rounded text-xs uppercase tracking-wider font-semibold"
+                  disabled={uploadingDevelopmentImages}
+                  className="btn-brand px-6 py-3.5 rounded text-xs uppercase tracking-wider font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   Guardar Proyecto
                 </button>
