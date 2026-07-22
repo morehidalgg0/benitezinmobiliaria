@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X, Phone, MessageCircle } from 'lucide-react';
 import Instagram from './Instagram';
+import BrandLogo from './BrandLogo';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,30 +43,8 @@ export default function Header() {
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* LOGO */}
-        <Link href="/" className="flex items-center space-x-3 group">
-          <svg
-            className={`w-8 h-8 transition-transform duration-500 group-hover:rotate-12 ${
-              scrolled || isOpen ? 'text-white' : 'text-brand'
-            }`}
-            viewBox="0 0 100 100"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="6"
-          >
-            <path d="M20 80 L50 20 L80 80 Z" strokeLinejoin="round" />
-            <path d="M35 80 L50 50 L65 80" strokeLinejoin="round" />
-            <line x1="50" y1="20" x2="50" y2="80" strokeDasharray="4,4" />
-          </svg>
-          <div className="flex flex-col">
-            <span className="font-semibold text-lg tracking-widest text-white uppercase group-hover:text-brand-light transition-colors duration-300">
-              BENÍTEZ
-            </span>
-            <span className={`text-[9px] tracking-[0.25em] uppercase -mt-1 font-medium ${
-              scrolled || isOpen ? 'text-white/80' : 'text-neutral-400'
-            }`}>
-              INMOBILIARIA
-            </span>
-          </div>
+        <Link href="/" className="group" aria-label="Benítez Inmobiliaria">
+          <BrandLogo size="sm" compact className="transition-transform duration-300 group-hover:scale-[1.02]" />
         </Link>
 
         {/* DESKTOP MENU */}

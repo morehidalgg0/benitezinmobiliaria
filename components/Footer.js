@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Mail, MapPin, Phone, MessageCircle, Shield } from 'lucide-react';
 import Instagram from './Instagram';
+import BrandLogo from './BrandLogo';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -10,27 +11,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
         {/* COL 1: BRAND */}
         <div className="flex flex-col space-y-6">
-          <div className="flex items-center space-x-3">
-            <svg
-              className="w-7 h-7 text-brand"
-              viewBox="0 0 100 100"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="6"
-            >
-              <path d="M20 80 L50 20 L80 80 Z" strokeLinejoin="round" />
-              <path d="M35 80 L50 50 L65 80" strokeLinejoin="round" />
-              <line x1="50" y1="20" x2="50" y2="80" strokeDasharray="4,4" />
-            </svg>
-            <div className="flex flex-col">
-              <span className="font-semibold text-base tracking-widest text-white uppercase">
-                BENÍTEZ
-              </span>
-              <span className="text-[8px] tracking-[0.25em] text-neutral-500 uppercase -mt-1 font-medium">
-                INMOBILIARIA
-              </span>
-            </div>
-          </div>
+          <BrandLogo size="sm" compact />
           <p className="text-sm leading-relaxed">
             Especialistas en propiedades residenciales, comerciales y emprendimientos de alta gama.
             Brindamos soluciones integrales y asesoramiento de excelencia en el mercado inmobiliario premium.

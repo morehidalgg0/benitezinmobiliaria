@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Shield, Lock, User, Send } from 'lucide-react';
+import { Lock, User, Send } from 'lucide-react';
+import BrandLogo from '@/components/BrandLogo';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -43,16 +44,14 @@ export default function AdminLoginPage() {
     <div className="min-h-[70vh] flex items-center justify-center px-6 py-20">
       <div className="w-full max-w-md bg-neutral-900 border border-neutral-850 rounded-lg p-8 shadow-2xl space-y-8">
         {/* LOGO */}
-        <div className="text-center space-y-3">
-          <div className="w-12 h-12 rounded-full bg-brand-light text-brand flex items-center justify-center mx-auto border border-brand/20 shadow-md shadow-brand/5">
-            <Shield className="w-6 h-6" />
-          </div>
+        <div className="text-center space-y-5">
+          <BrandLogo size="lg" className="justify-center" />
           <div>
             <h1 className="font-semibold text-lg tracking-widest text-white uppercase">
               Acceso de Administrador
             </h1>
-            <p className="text-[10px] tracking-[0.2em] text-neutral-500 uppercase mt-0.5">
-              Benítez Inmobiliaria
+            <p className="text-[10px] tracking-[0.2em] text-neutral-500 uppercase mt-2">
+              Panel privado
             </p>
           </div>
         </div>
