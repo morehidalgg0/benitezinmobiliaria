@@ -98,6 +98,64 @@ function DashboardContent() {
     return [...currentImages, ...images].join('\n');
   };
 
+  const removeImageAt = (currentValue, indexToRemove) => parseImagesInput(currentValue)
+    .filter((_, index) => index !== indexToRemove)
+    .join('\n');
+
+  const moveImageToFirst = (currentValue, indexToMove) => {
+    const images = parseImagesInput(currentValue);
+    if (indexToMove <= 0 || indexToMove >= images.length) return currentValue;
+
+    const [selectedImage] = images.splice(indexToMove, 1);
+    return [selectedImage, ...images].join('\n');
+  };
+
+  const renderImageManager = ({ value, onChange }) => {
+    const images = parseImagesInput(value);
+
+    if (images.length === 0) {
+      return (
+        <div className="rounded border border-dashed border-neutral-800 bg-neutral-950/60 px-4 py-6 text-center text-[10px] uppercase tracking-wider text-neutral-500">
+          Todavía no hay imágenes cargadas.
+        </div>
+      );
+    }
+
+    return (
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {images.map((image, index) => (
+          <div key={`${image}-${index}`} className="overflow-hidden rounded border border-neutral-800 bg-neutral-950">
+            <div className="relative h-28 bg-neutral-900">
+              <img src={image} alt={`Imagen ${index + 1}`} className="h-full w-full object-cover" />
+              {index === 0 && (
+                <span className="absolute left-2 top-2 rounded bg-brand px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-white shadow">
+                  Portada
+                </span>
+              )}
+            </div>
+            <div className="grid grid-cols-2 gap-2 p-2">
+              <button
+                type="button"
+                onClick={() => onChange(moveImageToFirst(value, index))}
+                disabled={index === 0}
+                className="rounded bg-neutral-900 px-2 py-2 text-[9px] font-semibold uppercase tracking-wider text-neutral-300 transition-colors hover:text-brand disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Principal
+              </button>
+              <button
+                type="button"
+                onClick={() => onChange(removeImageAt(value, index))}
+                className="rounded bg-red-950/40 px-2 py-2 text-[9px] font-semibold uppercase tracking-wider text-red-300 transition-colors hover:bg-red-900/60 hover:text-red-100"
+              >
+                Borrar
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   const handlePropertyImageFiles = async (e) => {
     try {
       setUploadingPropertyImages(true);
@@ -971,6 +1029,8 @@ function DashboardContent() {
                 <p className="mb-2 text-[10px] leading-relaxed text-neutral-500">
                   Puede subir archivos JPG/PNG/WebP de hasta 4 MB cada uno. Se guardan en Vercel Blob y aquí queda la URL pública. También puede pegar URLs, una por línea.
                 </p>
+                {renderImageManager({ value: propImagesText, onChange: setPropImagesText })}
+                <label className="mt-4 mb-2 block text-[10px] font-semibold text-neutral-500 uppercase tracking-wider">URLs / edición avanzada</label>
                 <textarea
                   rows="4"
                   value={propImagesText}
@@ -1108,6 +1168,8 @@ function DashboardContent() {
                 <p className="mb-2 text-[10px] leading-relaxed text-neutral-500">
                   Puede subir archivos JPG/PNG/WebP de hasta 4 MB cada uno. Se guardan en Vercel Blob y aquí queda la URL pública. También puede pegar URLs, una por línea.
                 </p>
+                {renderImageManager({ value: devImagesText, onChange: setDevImagesText })}
+                <label className="mt-4 mb-2 block text-[10px] font-semibold text-neutral-500 uppercase tracking-wider">URLs / edición avanzada</label>
                 <textarea
                   rows="4"
                   value={devImagesText}
