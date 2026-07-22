@@ -8,9 +8,9 @@
   --bg-tertiary: #f8edf0;
   
   /* Identidad Visual Benítez: Rosa / Rose Premium */
-  --brand-primary: #e06a8f;
-  --brand-secondary: #ea8ea9;
-  --brand-dark: #b54667;
+  --brand-primary: #f76d91;
+  --brand-secondary: #ff86a5;
+  --brand-dark: #cf4f73;
   --brand-light: #fbeef1;
   
   --text-primary: #1f1a1c;
@@ -132,6 +132,31 @@ body {
 
 .bg-brand {
   background-color: var(--brand-primary);
+}
+
+.admin-dashboard input:not([type="checkbox"]),
+.admin-dashboard select,
+.admin-dashboard textarea {
+  background-color: #ffffff !important;
+  color: #1f1a1c !important;
+  border-color: #eedbe0 !important;
+}
+
+.admin-dashboard input::placeholder,
+.admin-dashboard textarea::placeholder {
+  color: #9c8f93 !important;
+}
+
+.admin-dashboard select option {
+  background-color: #ffffff;
+  color: #1f1a1c;
+}
+
+.admin-dashboard input:-webkit-autofill,
+.admin-dashboard textarea:-webkit-autofill,
+.admin-dashboard select:-webkit-autofill {
+  -webkit-text-fill-color: #1f1a1c !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
 }
 
 /* Custom form focus styling */

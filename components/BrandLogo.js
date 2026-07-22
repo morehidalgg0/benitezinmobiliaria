@@ -1,42 +1,46 @@
 export default function BrandLogo({ size = 'md', compact = false, className = '' }) {
   const sizes = {
     sm: {
-      box: 'w-11 h-11',
-      letter: 'text-5xl',
-      name: 'text-[10px]',
-      label: 'text-[9px]',
-      gap: 'space-y-0.5',
+      box: 'w-14 h-14',
+      letter: 'text-[4.6rem]',
+      name: 'text-[8px]',
+      label: 'text-[8px]',
+      nameTop: 'top-[45%]',
+      labelBottom: 'bottom-1.5',
     },
     md: {
-      box: 'w-14 h-14',
-      letter: 'text-6xl',
-      name: 'text-xs',
-      label: 'text-[10px]',
-      gap: 'space-y-1',
+      box: 'w-20 h-20',
+      letter: 'text-[6.8rem]',
+      name: 'text-[11px]',
+      label: 'text-[11px]',
+      nameTop: 'top-[45%]',
+      labelBottom: 'bottom-2.5',
     },
     lg: {
-      box: 'w-24 h-24',
-      letter: 'text-[7rem]',
-      name: 'text-base',
-      label: 'text-sm',
-      gap: 'space-y-1.5',
+      box: 'w-36 h-36',
+      letter: 'text-[12rem]',
+      name: 'text-xl',
+      label: 'text-xl',
+      nameTop: 'top-[44%]',
+      labelBottom: 'bottom-5',
     },
   };
 
   const current = sizes[size] || sizes.md;
 
   return (
-    <div className={`inline-flex items-center ${compact ? 'gap-3' : 'gap-4'} ${className}`}>
-      <div className={`${current.box} bg-brand flex items-center justify-center overflow-hidden shadow-lg shadow-brand/20`}>
-        <span className={`${current.letter} leading-none font-serif text-white -mt-1`} aria-hidden="true">
+    <div className={`inline-flex items-center ${className}`} aria-label="Benítez Inmobiliaria">
+      <div className={`${current.box} relative bg-brand overflow-hidden shadow-lg shadow-brand/20`}>
+        <span
+          className={`absolute left-1/2 top-[43%] -translate-x-1/2 -translate-y-1/2 ${current.letter} leading-none font-serif text-white select-none`}
+          aria-hidden="true"
+        >
           B
         </span>
-      </div>
-      <div className={`flex flex-col ${current.gap} leading-none`}>
-        <span className={`${current.name} font-serif tracking-[0.2em] text-white uppercase`}>
-          Benítez
+        <span className={`absolute left-1/2 ${current.nameTop} -translate-x-1/2 -translate-y-1/2 ${current.name} font-serif tracking-[0.12em] text-white uppercase leading-none`}>
+          Benitez
         </span>
-        <span className={`${current.label} font-serif tracking-[0.18em] text-white/80 uppercase`}>
+        <span className={`absolute left-1/2 ${current.labelBottom} -translate-x-1/2 ${current.label} font-serif tracking-[0.11em] text-white uppercase leading-none`}>
           Inmobiliaria
         </span>
       </div>
