@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="es" className={`${montserrat.variable} scroll-smooth`}>
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
       <body className="flex flex-col min-h-screen">
         <Header />
